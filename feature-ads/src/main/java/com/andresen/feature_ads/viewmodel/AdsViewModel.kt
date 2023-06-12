@@ -39,6 +39,7 @@ class AdsViewModel(
                 is DataResult.Error.AppError -> {
                     mutableUnitsState.value = AdsMapper.error()
                 }
+
                 is DataResult.Error.NoNetwork -> {
                     mutableUnitsState.value = AdsMapper.error()
                 }
@@ -47,12 +48,10 @@ class AdsViewModel(
         }
     }
 
-    fun onSearchClick(search: String) {
+    fun onTextChange(search: String) {
         mutableUnitsState.update { state ->
             if (search.isNotEmpty()) {
-                //AdsMapper.applySearchQuery(state, search)
                 AdsMapper.applySearchQueryResult(state, search)
-
             } else {
                 state
             }
@@ -75,6 +74,7 @@ class AdsViewModel(
                     is DataResult.Error.AppError -> {
                         AdsMapper.error()
                     }
+
                     is DataResult.Error.NoNetwork -> {
                         AdsMapper.error()
                     }
@@ -87,30 +87,10 @@ class AdsViewModel(
     fun favouriteAd(
         adUi: AdUiModel,
         //favouriteLink: String?
-        //mapUi: MapUi,
-        //event: MapEvent.CreateMarker
+
     ) {
         viewModelScope.launch {
 
-            /*remoteRepository.insertMarker(
-            MapMapper.mapMarkerUiToMarkerDto(
-                MarkerUi(
-                    lat = event.latLng.latitude,
-                    lng = event.latLng.longitude
-                )
-            )
-        )
-
-        localRepository.insertMarker(
-            MapMapper.mapMarkerUiToMarkerEntity(
-                MarkerUi(
-                    lat = event.latLng.latitude,
-                    lng = event.latLng.longitude
-                )
-            )
-        )
-
-        return MapMapper.updateUiMarkers(mapUi, mutableMarkers.value)*/
         }
     }
 }

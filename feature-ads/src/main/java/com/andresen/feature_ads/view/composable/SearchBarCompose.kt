@@ -9,10 +9,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.andresen.library_style.components.AdCollectorTextSearchField
 
 @Composable
-fun AdCollectorSearchBarCompose(
+fun SearchBarCompose(
     modifier: Modifier = Modifier,
     searchText: String?,
-    onSearchClick: (String) -> Unit = { },
+    onTextChange: (String) -> Unit = { },
     onClearSearch: () -> Unit = { },
 ) {
 
@@ -22,9 +22,8 @@ fun AdCollectorSearchBarCompose(
             searchText = searchText.orEmpty(),
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            onTextChange = onSearchClick,
+            onTextChange = onTextChange,
             onClearClick = onClearSearch,
-            onSearchClick = onSearchClick,
         )
     }
 }

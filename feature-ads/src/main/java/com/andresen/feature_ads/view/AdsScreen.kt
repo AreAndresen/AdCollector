@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -30,7 +31,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsContentUi
-import com.andresen.feature_ads.view.composable.AdCollectorSearchBarCompose
 import com.andresen.feature_ads.view.composable.SearchBarCompose
 import com.andresen.feature_ads.viewmodel.AdsViewModel
 import com.andresen.library_style.theme.AdCollectorTheme
@@ -48,16 +48,18 @@ fun AdsScreen(
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(
-        modifier = Modifier,
+        modifier = Modifier.padding(
+            top = 16.dp
+        ),
         scaffoldState = scaffoldState,
         topBar = {
-            AdCollectorSearchBarCompose(
+            SearchBarCompose(
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(20.dp)
                     .fillMaxWidth(),
                 searchText = searchText,
-                onSearchClick = { search ->
-                    viewModel.onSearchClick(search)
+                onTextChange = { search ->
+                    viewModel.onTextChange(search)
                 },
                 onClearSearch = {
                     viewModel.onClearSearch()
@@ -107,7 +109,10 @@ fun AdsGridScreen(
                 }
 
                 Text(
-                    text = stringResource(id = com.andresen.library_style.R.string.price, ads[index].price.toString()),
+                    text = stringResource(
+                        id = com.andresen.library_style.R.string.price,
+                        ads[index].price.toString()
+                    ),
                     textAlign = TextAlign.Center,
                     color = AdCollectorTheme.colors.mediumLight10,
                     style = AdCollectorTheme.typography.title1,
@@ -115,7 +120,10 @@ fun AdsGridScreen(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = stringResource(id = com.andresen.library_style.R.string.title, ads[index].title.toString()),
+                    text = stringResource(
+                        id = com.andresen.library_style.R.string.title,
+                        ads[index].title.toString()
+                    ),
                     textAlign = TextAlign.Center,
                     color = AdCollectorTheme.colors.mediumLight10,
                     style = AdCollectorTheme.typography.title3,
@@ -123,7 +131,10 @@ fun AdsGridScreen(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = stringResource(id = com.andresen.library_style.R.string.location, ads[index].location.toString()),
+                    text = stringResource(
+                        id = com.andresen.library_style.R.string.location,
+                        ads[index].location.toString()
+                    ),
                     textAlign = TextAlign.Center,
                     color = AdCollectorTheme.colors.mediumLight10,
                     style = AdCollectorTheme.typography.body,

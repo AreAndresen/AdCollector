@@ -40,13 +40,11 @@ import com.andresen.library_style.theme.AdCollectorTheme
 fun AdCollectorTextSearchField(
     modifier: Modifier = Modifier,
     searchText: String,
-    onSearchClick: (String) -> Unit = { },
     onTextChange: (String) -> Unit,
     onClearClick: () -> Unit = { },
     singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
-
 
     Box(
         modifier = modifier
