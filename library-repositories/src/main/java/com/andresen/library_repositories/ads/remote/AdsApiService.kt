@@ -8,9 +8,13 @@ import retrofit2.http.Url
 
 interface AdsApiService {
 
-    @GET()
+    /*@GET("discover.json")
     @Headers("Accept: application/json")
-    suspend fun getAds(): List<AdDto>
+    suspend fun getAds(): List<AdDto>*/
+
+    @GET("baldermork/6a1bcc8f429dcdb8f9196e917e5138bd/raw/discover.json")
+    @Headers("Accept: application/json")
+    suspend fun getAds(): AdsDto//List<AdDto> // @Url link: String
 
 
     @PUT

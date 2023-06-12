@@ -77,7 +77,10 @@ fun AdsScreen(
             when (state) {
                 is AdsContentUi.Loading -> {} // todo LoadingScreen(modifier)
                 is AdsContentUi.AdsContent -> {
-                    UnitsGridScreen(state.ads)
+                    UnitsGridScreen(
+                        state.ads.items,
+                        onFavouriteAdClick
+                    )
                 }
 
                 is AdsContentUi.Error -> {} //todo ErrorScreen(retryAction, modifier)
@@ -89,6 +92,7 @@ fun AdsScreen(
 @Composable
 fun UnitsGridScreen(
     units: List<AdUiModel>,
+    onFavouriteAdClick: (AdUiModel) -> Unit = { },
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
@@ -133,7 +137,7 @@ fun AdPhotoCard(ad: AdUiModel, modifier: Modifier = Modifier) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
-                .data(ad.imgSrc)
+                .data(ad.image?.imageUrl)
                 .crossfade(true)
                 .build(),
             error = painterResource(com.andresen.library_style.R.drawable.error_img),

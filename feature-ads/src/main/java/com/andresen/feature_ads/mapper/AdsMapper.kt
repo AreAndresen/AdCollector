@@ -1,10 +1,16 @@
 package com.andresen.feature_ads.mapper
 
+import android.text.SpannableStringBuilder
+import com.andresen.feature_ads.model.AdTypeUi
 import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsContentUi
 import com.andresen.feature_ads.model.AdsTopSearchBar
 import com.andresen.feature_ads.model.AdsUi
+import com.andresen.feature_ads.model.AdsUiModel
+import com.andresen.feature_ads.model.ImageUi
 import com.andresen.library_repositories.ads.remote.AdDto
+import com.andresen.library_repositories.ads.remote.AdTypeDto
+import com.andresen.library_repositories.ads.remote.AdsDto
 
 object AdsMapper {
 
@@ -24,14 +30,19 @@ object AdsMapper {
 
 
     fun createAdsContent(
-        adsDto: List<AdDto>
+        adsDto: AdsDto
     ): AdsUi {
         return AdsUi(
             adsTopSearchBar = AdsTopSearchBar(
                 query = ""
             ),
             adsContent = AdsContentUi.AdsContent(
-                ads = mapAds(adsDto)
+                ads = AdsUiModel(
+                    fetchMore = null,
+                    size = adsDto.size,
+                    version = adsDto.version,
+                    items = mapAds(adsDto.items)
+                )
             )
         )
     }
@@ -39,9 +50,26 @@ object AdsMapper {
     private fun mapAdDtoToAdUi(
         adDto: AdDto
     ): AdUiModel {
+        val imageBaseUrl = "https://images.finncdn.no/dynamic/480x360c/"
+        val imageUrl = StringBuilder()
+        imageUrl.append(imageBaseUrl)
+
         return AdUiModel(
             id = adDto.id,
-            imgSrc = adDto.image?.url
+            adType = when(adDto.adTypeDto) {
+                AdTypeDto.BAP -> AdTypeUi.BAP
+                AdTypeDto.REALESTATE -> AdTypeUi.REALESTATE
+                AdTypeDto.B2B -> AdTypeUi.B2B
+                AdTypeDto.Unknown -> AdTypeUi.Unknown
+            },
+            image = ImageUi(
+                imageUrl = imageUrl.append(adDto.image?.url).toString(),
+                width = adDto.image?.width,
+                height = adDto.image?.height,
+            ),
+            price = 0, //"adDto.price",
+            location = adDto.location
+
         )
     }
 
@@ -53,9 +81,17 @@ object AdsMapper {
         }
     }
 
+    /*private fun mapAdsUi(
+        ads: AdsDto
+    ): AdsUiModel {
+        return ads.map { dtoItem ->
+            mapAdDtoToAdUi(dtoItem)
+        }
+    }*/
+
     fun emptySearch(
         state: AdsUi,
-        adsDto: List<AdDto>
+        adsDto: AdsDto//List<AdDto>
     ): AdsUi {
         val adsContent = state.adsContent
         val topSearchBar = state.adsTopSearchBar
@@ -65,7 +101,7 @@ object AdsMapper {
             ),
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
-                    ads = mapAds(adsDto)
+                    //ads = mapAds(adsDto)
                 )
             } else adsContent
         )
@@ -79,9 +115,9 @@ object AdsMapper {
         return state.copy(
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
-                    ads = adsContent.ads.filter { unit ->
+                    /*ads = adsContent.ads.filter { unit ->
                         unit.id.contains(query)
-                    }
+                    }*/
                 )
             } else adsContent
         )

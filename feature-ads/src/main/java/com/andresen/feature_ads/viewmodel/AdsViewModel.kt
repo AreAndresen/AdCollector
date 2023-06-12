@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AdsViewModel(
-    // todo rename units
     private val adsRepository: AdsRepository
 ) : ViewModel() {
 
@@ -26,8 +25,9 @@ class AdsViewModel(
 
     private fun createAds() {
         viewModelScope.launch {
-            when (val adsResult =
-                adsRepository.getAdsDto()) { // unitRepository.getMockUnits()
+            when (val adsResult = adsRepository.getAdsDto()) {
+
+
                 is DataResult.Success -> {
                     val adsDto = adsResult.data
 
@@ -36,8 +36,12 @@ class AdsViewModel(
                     )
                 }
 
-                is DataResult.Error.AppError -> mutableUnitsState.value = AdsMapper.error()
-                is DataResult.Error.NoNetwork -> mutableUnitsState.value = AdsMapper.error()
+                is DataResult.Error.AppError -> {
+                    mutableUnitsState.value = AdsMapper.error()
+                }
+                is DataResult.Error.NoNetwork -> {
+                    mutableUnitsState.value = AdsMapper.error()
+                }
             }
 
         }
@@ -58,9 +62,9 @@ class AdsViewModel(
     fun onClearSearch() {
         viewModelScope.launch {
             mutableUnitsState.update { state ->
-                when (val unitsResult = adsRepository.getAdsDto()) {
+                when (val adsResult = adsRepository.getAdsDto()) {
                     is DataResult.Success -> {
-                        val adsDto = unitsResult.data
+                        val adsDto = adsResult.data
 
                         AdsMapper.emptySearch(
                             state = state,
@@ -68,8 +72,12 @@ class AdsViewModel(
                         )
                     }
 
-                    is DataResult.Error.AppError -> AdsMapper.error()
-                    is DataResult.Error.NoNetwork -> AdsMapper.error()
+                    is DataResult.Error.AppError -> {
+                        AdsMapper.error()
+                    }
+                    is DataResult.Error.NoNetwork -> {
+                        AdsMapper.error()
+                    }
                 }
 
             }

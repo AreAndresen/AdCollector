@@ -13,7 +13,7 @@ class AdsRepositoryImpl(
     private val adsGlobalEvent: AdsGlobalEvent
 ) : AdsRepository {
 
-    override suspend fun getAdsDto(): DataResult<out List<AdDto>> =
+    override suspend fun getAdsDto(): DataResult<out AdsDto> = // List<AdDto>
         withContext(dispatchers.io) {
             requestHelper.tryRequest {
 

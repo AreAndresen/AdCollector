@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class ApiServiceFactoryImpl(
     context: Context,
 ) {
-    private val BASE_URL = "https://gist.githubusercontent.com/baldermork/6a1bcc8f429dcdb8f9196e917e5138bd/raw/discover.json/"
+    private val BASE_URL = "https://gist.githubusercontent.com/"
 
     val baseUrl = BASE_URL
 

@@ -1,6 +1,6 @@
 package com.andresen.feature_ads.model
 
-import kotlinx.serialization.Serializable
+import com.andresen.library_repositories.ads.remote.AdDto
 
 
 data class AdsUi(
@@ -12,15 +12,34 @@ sealed interface AdsContentUi {
     object Loading : AdsContentUi
     object Error : AdsContentUi
     data class AdsContent(
-        val ads: List<AdUiModel>
+        val ads: AdsUiModel
     ) : AdsContentUi
 }
 
-@Serializable
+data class AdsUiModel(
+    val items: List<AdUiModel>,
+    val fetchMore: List<AdUiModel>?,
+    val size: Int?,
+    val version: String?
+)
+
+
 data class AdUiModel(
     val id: String,
-    val imgSrc: String?
+    val adType: AdTypeUi,
+    val image: ImageUi?,
+    val price: Int?,
+    val location: String?
 )
+
+
+data class ImageUi(
+    val imageUrl: String?,
+    val width: Int?,
+    val height: Int?
+)
+
+enum class AdTypeUi { BAP, REALESTATE, B2B, Unknown }
 
 data class AdsTopSearchBar(
     val query: String

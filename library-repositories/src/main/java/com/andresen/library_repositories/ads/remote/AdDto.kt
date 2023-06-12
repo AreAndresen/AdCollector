@@ -4,24 +4,60 @@ import com.squareup.moshi.Json
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
+data class AdsDto(
+    val items: List<AdDto>,
+    val fetchMore: List<AdDto>?,
+    val size: Int?,
+    val version: String?
+)
+
 
 @Serializable
 data class AdDto(
+    val description: String?= null,
     val id: String,
+    val url: String?,
     @SerialName(value = "ad-type")
-    val adType: AdType,
+    val adTypeDto: AdTypeDto,
+    val location: String?= null,
+    val type: String?= null,
+    @SerialName(value = "price")
+    val price: Price?= null,
     @SerialName(value = "image")
-    val image: ImageDto?,
-    val price: Int?,
-    val location: String?
+    val image: ImageDto? = null,
+    @SerialName(value = "shippingOption")
+    val shippingOption: ShippingOption? = null,
+    val score: Double?= null,
+    val version: String?= null,
+    val favourite: Favourite? = null
+)
+
+@Serializable
+data class Price(
+    val value: Int? = 0,
+    val total: Int? = 0
+)
+
+@Serializable
+data class ShippingOption(
+    val label: String?
+)
+
+
+@Serializable
+data class Favourite(
+    val itemId: String?,
+    val itemType: String?
 )
 
 @Serializable
 data class ImageDto(
-    val url: String,
-    val width: Int,
-    val heigh: Int,
-
+    val url: String?,
+    val width: Int?,
+    val height: Int?,
+    val type: String?,
+    val scalable: Boolean?
     /*
 
     val type:
@@ -42,7 +78,7 @@ enum class Type(val value: String) {
     Unknown("")
 }*/
 
-enum class AdType(val value: String) {
+enum class AdTypeDto(val value: String) {
     @Json(name = "BAP")
     BAP("BAP"),
 
