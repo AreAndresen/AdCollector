@@ -133,7 +133,8 @@ object AdsMapper {
                 height = null,
             ),
             adType = AdTypeUi.Unknown,
-            location = adEntity.location
+            location = adEntity.location,
+            isFavourite = adEntity.isFavourite
         )
     }
 
