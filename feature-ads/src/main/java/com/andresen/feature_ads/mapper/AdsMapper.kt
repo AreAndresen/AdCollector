@@ -82,17 +82,10 @@ object AdsMapper {
         }
     }
 
-    /*private fun mapAdsUi(
-        ads: AdsDto
-    ): AdsUiModel {
-        return ads.map { dtoItem ->
-            mapAdDtoToAdUi(dtoItem)
-        }
-    }*/
 
     fun emptySearch(
         state: AdsUi,
-        adsDto: AdsDto//List<AdDto>
+        adsDto: AdsDto
     ): AdsUi {
         val adsContent = state.adsContent
         val topSearchBar = state.adsTopSearchBar
@@ -102,7 +95,9 @@ object AdsMapper {
             ),
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
-                    //ads = mapAds(adsDto)
+                    ads = adsContent.ads.copy(
+                        items = mapAds(adsDto.items)
+                    )
                 )
             } else adsContent
         )
@@ -116,24 +111,13 @@ object AdsMapper {
         return state.copy(
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
-                    /*ads = adsContent.ads.filter { unit ->
-                        unit.id.contains(query)
-                    }*/
+                    ads = adsContent.ads.copy(
+                        items = adsContent.ads.items.filter { ad ->
+                            ad.title.contains(query)
+                        }
+                    )
                 )
             } else adsContent
-        )
-    }
-
-    fun applySearchQuery(
-        state: AdsUi,
-        query: String
-    ): AdsUi {
-        val unitTopSearchBar = state.adsTopSearchBar
-
-        return state.copy(
-            adsTopSearchBar = unitTopSearchBar.copy(
-                query = query
-            )
         )
     }
 

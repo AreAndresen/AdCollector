@@ -50,7 +50,7 @@ class AdsViewModel(
     fun onSearchClick(search: String) {
         mutableUnitsState.update { state ->
             if (search.isNotEmpty()) {
-                AdsMapper.applySearchQuery(state, search)
+                //AdsMapper.applySearchQuery(state, search)
                 AdsMapper.applySearchQueryResult(state, search)
 
             } else {

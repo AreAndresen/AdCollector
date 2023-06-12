@@ -28,7 +28,7 @@ fun TopAppBarComposable(
             IconButton(onClick = { onToggleNightVision() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.edit),
-                    contentDescription = stringResource(id = R.string.map_edit)
+                    contentDescription = stringResource(id = R.string.search_title)
                 )
             }
         },

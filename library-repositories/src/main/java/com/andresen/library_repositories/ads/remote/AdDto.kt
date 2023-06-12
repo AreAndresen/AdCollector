@@ -15,7 +15,7 @@ data class AdsDto(
 
 @Serializable
 data class AdDto(
-    val description: String?= null,
+    val description: String,
     val id: String,
     val url: String?,
     @SerialName(value = "ad-type")
