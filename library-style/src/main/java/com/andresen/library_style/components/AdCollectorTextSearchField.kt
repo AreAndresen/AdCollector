@@ -169,7 +169,7 @@ private fun AnimatedTextFieldContent(
                 IconButton(onClick = { onGetLocalFavourites() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.star_favourite),
-                        contentDescription = null,
+                        contentDescription = rememberStringResource(id = R.string.see_favourites),
                         tint = AdCollectorTheme.colors.contrastLight
                     )
                 }
