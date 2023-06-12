@@ -67,8 +67,9 @@ object AdsMapper {
                 width = adDto.image?.width,
                 height = adDto.image?.height,
             ),
-            price = 0, //"adDto.price",
-            location = adDto.location
+            price = adDto.price?.value ?: adDto.price?.total,
+            location = adDto.location,
+            title = adDto.description
 
         )
     }

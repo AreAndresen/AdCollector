@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
@@ -30,7 +28,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.andresen.feature_ads.R
 import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsContentUi
 import com.andresen.feature_ads.view.composable.SearchBarCompose
@@ -77,7 +74,7 @@ fun AdsScreen(
             when (state) {
                 is AdsContentUi.Loading -> {} // todo LoadingScreen(modifier)
                 is AdsContentUi.AdsContent -> {
-                    UnitsGridScreen(
+                    AdsGridScreen(
                         state.ads.items,
                         onFavouriteAdClick
                     )
@@ -90,8 +87,8 @@ fun AdsScreen(
 }
 
 @Composable
-fun UnitsGridScreen(
-    units: List<AdUiModel>,
+fun AdsGridScreen(
+    ads: List<AdUiModel>,
     onFavouriteAdClick: (AdUiModel) -> Unit = { },
 ) {
     LazyVerticalGrid(
@@ -99,25 +96,36 @@ fun UnitsGridScreen(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(4.dp),
     ) {
-        items(units.size) { index ->
+        items(ads.size) { index ->
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(contentAlignment = Alignment.BottomCenter) {
-                    AdPhotoCard(units[index])
-                    Icon(
-                        modifier = Modifier.size(150.dp),
-                        painter = painterResource(com.andresen.library_style.R.drawable.chat),
-                        contentDescription = null,
-                        tint = AdCollectorTheme.colors.mediumLight10
-                    )
+                    AdPhotoCard(ads[index])
                 }
+
                 Text(
-                    text = stringResource(id = com.andresen.library_style.R.string.unit_id, units[index].id),
+                    text = stringResource(id = com.andresen.library_style.R.string.price, ads[index].price.toString()),
                     textAlign = TextAlign.Center,
                     color = AdCollectorTheme.colors.mediumLight10,
-                    style = AdCollectorTheme.typography.title2,
+                    style = AdCollectorTheme.typography.title1,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = stringResource(id = com.andresen.library_style.R.string.title, ads[index].title.toString()),
+                    textAlign = TextAlign.Center,
+                    color = AdCollectorTheme.colors.mediumLight10,
+                    style = AdCollectorTheme.typography.title3,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = stringResource(id = com.andresen.library_style.R.string.location, ads[index].location.toString()),
+                    textAlign = TextAlign.Center,
+                    color = AdCollectorTheme.colors.mediumLight10,
+                    style = AdCollectorTheme.typography.body,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -141,8 +149,8 @@ fun AdPhotoCard(ad: AdUiModel, modifier: Modifier = Modifier) {
                 .crossfade(true)
                 .build(),
             error = painterResource(com.andresen.library_style.R.drawable.error_img),
-            placeholder = painterResource(com.andresen.library_style.R.drawable.chat),
-            contentDescription = stringResource(com.andresen.library_style.R.string.unit_id),
+            placeholder = painterResource(com.andresen.library_style.R.drawable.downloading),
+            contentDescription = stringResource(com.andresen.library_style.R.string.price),
             contentScale = ContentScale.FillBounds,
         )
     }

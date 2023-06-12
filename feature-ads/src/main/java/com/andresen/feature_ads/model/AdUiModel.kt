@@ -28,6 +28,7 @@ data class AdUiModel(
     val id: String,
     val adType: AdTypeUi,
     val image: ImageUi?,
+    val title: String?,
     val price: Int?,
     val location: String?
 )

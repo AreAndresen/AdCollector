@@ -13,7 +13,7 @@ class AdsRepositoryImpl(
     private val adsGlobalEvent: AdsGlobalEvent
 ) : AdsRepository {
 
-    override suspend fun getAdsDto(): DataResult<out AdsDto> = // List<AdDto>
+    override suspend fun getAdsDto(): DataResult<out AdsDto> =
         withContext(dispatchers.io) {
             requestHelper.tryRequest {
 
@@ -29,8 +29,6 @@ class AdsRepositoryImpl(
 
                 val favouriteLinkWithUser = baseUrl +""+ad.image?.url
 
-
-                // todo implement real API
                 api.putFavorite(
                     adFavouriteLink = favouriteLinkWithUser,
                     //ad
