@@ -14,4 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "AdCollector"
 include ':app'
-include ':repository-repositories'
+include ':library-repositories'
+include ':feature-ads'
+include ':library-style'
