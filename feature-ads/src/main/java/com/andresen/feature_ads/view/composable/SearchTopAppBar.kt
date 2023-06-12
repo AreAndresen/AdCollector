@@ -68,7 +68,7 @@ fun SearchBarCompose(
             )
             IconButton(onClick = { onSearchClick(value) }) {
                 Icon(
-                    painter = painterResource(id =  com.andresen.library_style.R.drawable.x_remove),
+                    painter = painterResource(id =  com.andresen.library_style.R.drawable.search),
                     contentDescription = null,
                     tint = AdCollectorTheme.colors.contrastLight
                 )

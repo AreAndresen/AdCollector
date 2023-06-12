@@ -65,10 +65,10 @@ class MainActivity : ComponentActivity() {
                                     icon = {
                                         Icon(
                                             painter = when (screen.route) {
-                                                "settings" -> painterResource(id = com.andresen.library_style.R.drawable.chat)
-                                                "ads" -> painterResource(id = com.andresen.library_style.R.drawable.map)
-                                                "more" -> painterResource(id = com.andresen.library_style.R.drawable.units)
-                                                else -> painterResource(id = com.andresen.library_style.R.drawable.map)
+                                                "settings" -> painterResource(id = com.andresen.library_style.R.drawable.edit)
+                                                "ads" -> painterResource(id = com.andresen.library_style.R.drawable.ad_alert)
+                                                "more" -> painterResource(id = com.andresen.library_style.R.drawable.read_more)
+                                                else -> painterResource(id = com.andresen.library_style.R.drawable.ad_alert)
                                             },
                                             contentDescription = null
                                         )
