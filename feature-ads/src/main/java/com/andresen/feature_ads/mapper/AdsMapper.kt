@@ -109,6 +109,9 @@ object AdsMapper {
     ): AdsUi {
         val adsContent = state.adsContent
         return state.copy(
+            adsTopSearchBar = state.adsTopSearchBar.copy(
+                query = query
+            ),
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
                     ads = adsContent.ads.copy(

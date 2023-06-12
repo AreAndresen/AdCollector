@@ -1,7 +1,5 @@
 package com.andresen.feature_ads.model
 
-import com.andresen.library_repositories.ads.remote.AdDto
-
 
 data class AdsUi(
     val adsTopSearchBar: AdsTopSearchBar,

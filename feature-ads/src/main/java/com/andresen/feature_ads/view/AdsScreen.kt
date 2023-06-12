@@ -30,6 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsContentUi
+import com.andresen.feature_ads.view.composable.AdCollectorSearchBarCompose
 import com.andresen.feature_ads.view.composable.SearchBarCompose
 import com.andresen.feature_ads.viewmodel.AdsViewModel
 import com.andresen.library_style.theme.AdCollectorTheme
@@ -50,7 +51,7 @@ fun AdsScreen(
         modifier = Modifier,
         scaffoldState = scaffoldState,
         topBar = {
-            SearchBarCompose(
+            AdCollectorSearchBarCompose(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
