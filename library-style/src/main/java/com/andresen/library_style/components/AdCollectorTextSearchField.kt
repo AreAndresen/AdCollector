@@ -42,6 +42,7 @@ fun AdCollectorTextSearchField(
     searchText: String,
     onTextChange: (String) -> Unit,
     onClearClick: () -> Unit = { },
+    onGetLocalFavourites: () -> Unit = {},
     singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
@@ -79,7 +80,8 @@ fun AdCollectorTextSearchField(
             label = rememberStringResource(id = R.string.search_title),
             searchText = searchText,
             isTextFieldFocused = isTextFieldFocused,
-            onClearClick = onClearClick
+            onClearClick = onClearClick,
+            onGetLocalFavourites = onGetLocalFavourites
         )
     }
 }
@@ -90,6 +92,7 @@ private fun AnimatedTextFieldContent(
     searchText: String,
     isTextFieldFocused: Boolean,
     onClearClick: () -> Unit = {},
+    onGetLocalFavourites: () -> Unit = {},
 ) {
     val showLabel = remember(isTextFieldFocused, searchText) {
         !isTextFieldFocused && searchText.isEmpty()
@@ -141,6 +144,31 @@ private fun AnimatedTextFieldContent(
                 IconButton(onClick = { onClearClick() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.x_remove),
+                        contentDescription = null,
+                        tint = AdCollectorTheme.colors.contrastLight
+                    )
+                }
+            }
+
+        }
+    }
+
+    AnimatedVisibility(
+        visible = !showClearButton,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                IconButton(onClick = { onGetLocalFavourites() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.star_favourite),
                         contentDescription = null,
                         tint = AdCollectorTheme.colors.contrastLight
                     )

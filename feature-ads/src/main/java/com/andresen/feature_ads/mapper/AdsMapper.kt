@@ -1,6 +1,5 @@
 package com.andresen.feature_ads.mapper
 
-import android.text.SpannableStringBuilder
 import com.andresen.feature_ads.model.AdTypeUi
 import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsContentUi
@@ -8,6 +7,7 @@ import com.andresen.feature_ads.model.AdsTopSearchBar
 import com.andresen.feature_ads.model.AdsUi
 import com.andresen.feature_ads.model.AdsUiModel
 import com.andresen.feature_ads.model.ImageUi
+import com.andresen.library_repositories.ads.local.AdEntity
 import com.andresen.library_repositories.ads.remote.AdDto
 import com.andresen.library_repositories.ads.remote.AdTypeDto
 import com.andresen.library_repositories.ads.remote.AdsDto
@@ -47,6 +47,24 @@ object AdsMapper {
         )
     }
 
+    fun createFavouriteLocalAdsContent(
+        adEntity: List<AdEntity>
+    ): AdsUi {
+        return AdsUi(
+            adsTopSearchBar = AdsTopSearchBar(
+                query = ""
+            ),
+            adsContent = AdsContentUi.AdsContent(
+                ads = AdsUiModel(
+                    fetchMore = null,
+                    size = null,
+                    version = null, // todo
+                    items = mapEntityAds(adEntity)
+                )
+            )
+        )
+    }
+
     private fun mapAdDtoToAdUi(
         adDto: AdDto
     ): AdUiModel {
@@ -56,7 +74,7 @@ object AdsMapper {
 
         return AdUiModel(
             id = adDto.id,
-            adType = when(adDto.adTypeDto) {
+            adType = when (adDto.adTypeDto) {
                 AdTypeDto.BAP -> AdTypeUi.BAP
                 AdTypeDto.REALESTATE -> AdTypeUi.REALESTATE
                 AdTypeDto.B2B -> AdTypeUi.B2B
@@ -70,7 +88,6 @@ object AdsMapper {
             price = adDto.price?.value ?: adDto.price?.total,
             location = adDto.location,
             title = adDto.description
-
         )
     }
 
@@ -80,6 +97,44 @@ object AdsMapper {
         return ads.map { dtoItem ->
             mapAdDtoToAdUi(dtoItem)
         }
+    }
+
+    private fun mapEntityAds(
+        ads: List<AdEntity>
+    ): List<AdUiModel> {
+        return ads.map { dtoItem ->
+            mapAdEntityAdUi(dtoItem)
+        }
+    }
+
+    fun mapAdUiToAdEntity(
+        adUi: AdUiModel
+    ): AdEntity {
+        return AdEntity(
+            id = adUi.id,
+            title = adUi.title,
+            price = adUi.price,
+            imageUrl = adUi.image?.imageUrl,
+            isFavourite = true,
+            location = adUi.location
+        )
+    }
+
+    fun mapAdEntityAdUi(
+        adEntity: AdEntity
+    ): AdUiModel {
+        return AdUiModel(
+            id = adEntity.id,
+            title = adEntity.title,
+            price = adEntity.price,
+            image = ImageUi(
+                imageUrl = adEntity.imageUrl,
+                width = null,
+                height = null,
+            ),
+            adType = AdTypeUi.Unknown,
+            location = adEntity.location
+        )
     }
 
 
@@ -117,6 +172,25 @@ object AdsMapper {
                     ads = adsContent.ads.copy(
                         items = adsContent.ads.items.filter { ad ->
                             ad.title.contains(query)
+                        }
+                    )
+                )
+            } else adsContent
+        )
+    }
+
+    fun applyFavourite(state: AdsUi, adUi: AdUiModel): AdsUi {
+        val adsContent = state.adsContent
+        return state.copy(
+            adsContent = if (adsContent is AdsContentUi.AdsContent) {
+                adsContent.copy(
+                    ads = adsContent.ads.copy(
+                        items = adsContent.ads.items.map { ad ->
+                            if (ad == adUi) {
+                                ad.copy(
+                                    isFavourite = true
+                                )
+                            } else ad
                         }
                     )
                 )

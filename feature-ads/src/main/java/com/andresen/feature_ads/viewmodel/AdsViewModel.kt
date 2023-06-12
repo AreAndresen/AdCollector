@@ -5,15 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.andresen.feature_ads.mapper.AdsMapper
 import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsUi
+import com.andresen.library_repositories.ads.local.AdsLocalRepository
 import com.andresen.library_repositories.ads.remote.AdsRepository
 import com.andresen.library_repositories.helper.network.DataResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AdsViewModel(
-    private val adsRepository: AdsRepository
+    private val adsRepository: AdsRepository,
+    private val localRepository: AdsLocalRepository,
 ) : ViewModel() {
 
     private val mutableUnitsState = MutableStateFlow(AdsMapper.loading())
@@ -43,6 +46,17 @@ class AdsViewModel(
                 is DataResult.Error.NoNetwork -> {
                     mutableUnitsState.value = AdsMapper.error()
                 }
+            }
+
+        }
+    }
+
+    fun onGetLocalFavourites() {
+        viewModelScope.launch {
+            localRepository.getAds().collectLatest { ads ->
+                mutableUnitsState.value = AdsMapper.createFavouriteLocalAdsContent(
+                    adEntity = ads,
+                )
             }
 
         }
@@ -85,12 +99,20 @@ class AdsViewModel(
     }
 
     fun favouriteAd(
-        adUi: AdUiModel,
-        //favouriteLink: String?
-
+        adUi: AdUiModel
     ) {
         viewModelScope.launch {
+            mutableUnitsState.update { state ->
+                val adEntity = AdsMapper.mapAdUiToAdEntity(
+                    adUi
+                )
+                localRepository.insertAdFavourite(adEntity)
 
+                AdsMapper.applyFavourite(
+                    state = state,
+                    adUi = adUi,
+                )
+            }
         }
     }
 }

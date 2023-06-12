@@ -14,6 +14,7 @@ fun SearchBarCompose(
     searchText: String?,
     onTextChange: (String) -> Unit = { },
     onClearSearch: () -> Unit = { },
+    onGetLocalFavourites: () -> Unit = { },
 ) {
 
     Box {
@@ -24,6 +25,7 @@ fun SearchBarCompose(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             onTextChange = onTextChange,
             onClearClick = onClearSearch,
+            onGetLocalFavourites = onGetLocalFavourites
         )
     }
 }

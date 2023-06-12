@@ -28,10 +28,7 @@ fun AdCollectorNavHost(
         composable("ads") {
             AdsScreen(
                 modifier = modifier,
-                viewModel = adsViewModel,
-                onFavouriteAdClick = { ad ->
-                    adsViewModel.favouriteAd(ad)
-                }
+                viewModel = adsViewModel
             )
         }
         composable("more") {

@@ -1,5 +1,6 @@
 package com.andresen.feature_ads.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,9 +9,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
@@ -21,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -33,6 +36,7 @@ import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsContentUi
 import com.andresen.feature_ads.view.composable.SearchBarCompose
 import com.andresen.feature_ads.viewmodel.AdsViewModel
+import com.andresen.library_style.R
 import com.andresen.library_style.theme.AdCollectorTheme
 
 
@@ -40,7 +44,6 @@ import com.andresen.library_style.theme.AdCollectorTheme
 fun AdsScreen(
     modifier: Modifier = Modifier,
     viewModel: AdsViewModel,
-    onFavouriteAdClick: (AdUiModel) -> Unit = { },
 ) {
     val adsUiState by viewModel.state.collectAsState()
     val state = adsUiState.adsContent
@@ -63,6 +66,9 @@ fun AdsScreen(
                 },
                 onClearSearch = {
                     viewModel.onClearSearch()
+                },
+                onGetLocalFavourites = {
+                    viewModel.onGetLocalFavourites()
                 }
             )
         },
@@ -79,7 +85,9 @@ fun AdsScreen(
                 is AdsContentUi.AdsContent -> {
                     AdsGridScreen(
                         state.ads.items,
-                        onFavouriteAdClick
+                        onFavouriteAdClick = { ad ->
+                            viewModel.favouriteAd(ad)
+                        }
                     )
                 }
 
@@ -106,11 +114,22 @@ fun AdsGridScreen(
             ) {
                 Box(contentAlignment = Alignment.BottomCenter) {
                     AdPhotoCard(ads[index])
+
+                    IconButton(onClick = { onFavouriteAdClick(ads[index]) }) {
+                        Icon(
+                            modifier = Modifier.size(150.dp),
+                            painter = if (ads[index].isFavourite) {
+                                painterResource(id = R.drawable.star_favourite)
+                            } else painterResource(id = R.drawable.star_not_favourite),
+                            contentDescription = null,
+                            tint = AdCollectorTheme.colors.contrastLight
+                        )
+                    }
                 }
 
                 Text(
                     text = stringResource(
-                        id = com.andresen.library_style.R.string.price,
+                        id = R.string.price,
                         ads[index].price.toString()
                     ),
                     textAlign = TextAlign.Center,
@@ -121,8 +140,8 @@ fun AdsGridScreen(
                 )
                 Text(
                     text = stringResource(
-                        id = com.andresen.library_style.R.string.title,
-                        ads[index].title.toString()
+                        id = R.string.title,
+                        ads[index].title
                     ),
                     textAlign = TextAlign.Center,
                     color = AdCollectorTheme.colors.mediumLight10,
@@ -132,7 +151,7 @@ fun AdsGridScreen(
                 )
                 Text(
                     text = stringResource(
-                        id = com.andresen.library_style.R.string.location,
+                        id = R.string.location,
                         ads[index].location.toString()
                     ),
                     textAlign = TextAlign.Center,
@@ -147,7 +166,11 @@ fun AdsGridScreen(
 }
 
 @Composable
-fun AdPhotoCard(ad: AdUiModel, modifier: Modifier = Modifier) {
+fun AdPhotoCard(
+    ad: AdUiModel,
+    modifier: Modifier = Modifier,
+    onFavouriteAdClick: (AdUiModel) -> Unit = { },
+) {
     Card(
         modifier = modifier
             .padding(4.dp)
@@ -156,13 +179,16 @@ fun AdPhotoCard(ad: AdUiModel, modifier: Modifier = Modifier) {
         elevation = 8.dp,
     ) {
         AsyncImage(
+            modifier = Modifier.clickable {
+                onFavouriteAdClick(ad)
+            },
             model = ImageRequest.Builder(context = LocalContext.current)
                 .data(ad.image?.imageUrl)
                 .crossfade(true)
                 .build(),
-            error = painterResource(com.andresen.library_style.R.drawable.error_img),
-            placeholder = painterResource(com.andresen.library_style.R.drawable.downloading),
-            contentDescription = stringResource(com.andresen.library_style.R.string.price),
+            error = painterResource(R.drawable.error_img),
+            placeholder = painterResource(R.drawable.downloading),
+            contentDescription = stringResource(R.string.price),
             contentScale = ContentScale.FillBounds,
         )
     }

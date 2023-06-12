@@ -28,7 +28,8 @@ data class AdUiModel(
     val image: ImageUi?,
     val title: String,
     val price: Int?,
-    val location: String?
+    val location: String?,
+    val isFavourite: Boolean = false
 )
 
 

@@ -1,6 +1,9 @@
 package com.andresen.adcollector.main.koinmodules.repository
 
 import android.content.Context
+import com.andresen.library_repositories.ads.local.AdDatabase
+import com.andresen.library_repositories.ads.local.AdsLocalRepository
+import com.andresen.library_repositories.ads.local.AdsLocalRepositoryImpl
 import com.andresen.library_repositories.ads.remote.AdsGlobalEvent
 import com.andresen.library_repositories.ads.remote.AdsRepository
 import com.andresen.library_repositories.ads.remote.AdsRepositoryImpl
@@ -18,6 +21,10 @@ object RepositoryModule {
     fun createModules(context: Context): List<Module> {
         return listOf(
             module {
+                single { AdDatabase.createDao(get()) }
+                single<AdsLocalRepository> {
+                    AdsLocalRepositoryImpl(get())
+                }
                 factory { RequestHelper(get()) }
                 single { ApiServiceFactoryImpl(get()) }
                 factory<AdsRepository> {

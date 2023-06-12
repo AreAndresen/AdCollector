@@ -13,7 +13,7 @@ object AdsModule {
         return listOf(
            module {
                 viewModel {
-                    AdsViewModel(get())
+                    AdsViewModel(get(), get())
                 }
             }
         )
