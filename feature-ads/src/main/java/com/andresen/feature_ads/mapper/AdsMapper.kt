@@ -41,7 +41,7 @@ object AdsMapper {
                     fetchMore = null,
                     size = adsDto.size,
                     version = adsDto.version,
-                    items = mapAds(adsDto.items)
+                    items = mapAds(adsDto.items).take(30)  // todo quickfix to not overload
                 )
             )
         )
@@ -136,7 +136,7 @@ object AdsMapper {
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
                     ads = adsContent.ads.copy(
-                        items = mapAds(adsDto.items)
+                        items = mapAds(adsDto.items).take(30) // todo quickfix to not overload
                     )
                 )
             } else adsContent
