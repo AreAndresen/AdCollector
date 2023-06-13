@@ -158,7 +158,7 @@ object AdsMapper {
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
                     ads = adsContent.ads.copy(
-                    items = mapEntityAds(adEntity)
+                        items = mapEntityAds(adEntity)
                     )
                 )
             } else adsContent

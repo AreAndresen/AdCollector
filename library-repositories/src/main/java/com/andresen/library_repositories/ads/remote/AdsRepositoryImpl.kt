@@ -1,9 +1,8 @@
 package com.andresen.library_repositories.ads.remote
 
 import com.andresen.library_repositories.helper.AdCollectorDispatchers
-import com.andresen.library_repositories.helper.network.RequestHelper
 import com.andresen.library_repositories.helper.network.DataResult
-import kotlinx.coroutines.Dispatchers
+import com.andresen.library_repositories.helper.network.RequestHelper
 import kotlinx.coroutines.withContext
 
 class AdsRepositoryImpl(
@@ -25,20 +24,13 @@ class AdsRepositoryImpl(
         withContext(dispatchers.io) {
             requestHelper.tryRequest {
 
-                val baseUrl = "https://images.finncdn.no/dynamic/480x360c/"
-
-                val favouriteLinkWithUser = baseUrl +""+ad.image?.url
+                val favouriteLink = ad.url ?: ""
 
                 api.putFavorite(
-                    adFavouriteLink = favouriteLinkWithUser,
-                    //ad
+                    adFavouriteLink = favouriteLink,
                 )
-
-                withContext(Dispatchers.IO) {
-                    adsGlobalEvent.adUpdate()
-                }
+                // if i want to listen to favourites and call get in viewmodel to refresh
+                adsGlobalEvent.adUpdate()
             }
         }
-
-
 }

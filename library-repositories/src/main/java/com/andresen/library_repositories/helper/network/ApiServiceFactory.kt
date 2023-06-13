@@ -9,7 +9,7 @@ interface ApiServiceFactory {
 
     companion object {
         val moshi: Moshi = Moshi.Builder()
-            .addLast(KotlinJsonAdapterFactory()) // Most generic adapter last
+            .addLast(KotlinJsonAdapterFactory())
             .build()
     }
 }

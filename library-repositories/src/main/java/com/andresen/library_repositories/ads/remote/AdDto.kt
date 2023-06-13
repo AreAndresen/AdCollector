@@ -20,16 +20,13 @@ data class AdDto(
     val url: String?,
     @SerialName(value = "ad-type")
     val adTypeDto: AdTypeDto,
-    val location: String?= null,
-    val type: String?= null,
-    @SerialName(value = "price")
-    val price: Price?= null,
-    @SerialName(value = "image")
+    val location: String? = null,
+    val type: String? = null,
+    val price: Price? = null,
     val image: ImageDto? = null,
-    @SerialName(value = "shippingOption")
     val shippingOption: ShippingOption? = null,
-    val score: Double?= null,
-    val version: String?= null,
+    val score: Double? = null,
+    val version: String? = null,
     val favourite: Favourite? = null
 )
 
@@ -58,25 +55,7 @@ data class ImageDto(
     val height: Int?,
     val type: String?,
     val scalable: Boolean?
-    /*
-
-    val type:
-    "height": 800,
-"width": 1200,
-"type": "GENERAL",
-"scalable": true
-     */
 )
-
-/*
-enum class Type(val value: String) {
-    @Json(name = "manual")
-    GENERAL("manual"),
-
-    @Json(name = "consumed")
-    Consumed("consumed"),
-    Unknown("")
-}*/
 
 enum class AdTypeDto(val value: String) {
     @Json(name = "BAP")
@@ -91,13 +70,6 @@ enum class AdTypeDto(val value: String) {
     Unknown("")
 }
 
-
-data class PutFavouriteDto(
-    @Json(name = "_links") val links: LinkDto,
-)
-
 data class PutFavoritesRequestDto(
     val isFavourite: Boolean? = null
 )
-
-data class LinkDto(val href: String)

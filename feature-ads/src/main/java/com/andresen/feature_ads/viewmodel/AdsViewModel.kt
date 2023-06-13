@@ -29,8 +29,6 @@ class AdsViewModel(
     private fun createAds() {
         viewModelScope.launch {
             when (val adsResult = adsRepository.getAdsDto()) {
-
-
                 is DataResult.Success -> {
                     val adsDto = adsResult.data
 
@@ -47,7 +45,6 @@ class AdsViewModel(
                     mutableAdsState.value = AdsMapper.error()
                 }
             }
-
         }
     }
 
@@ -55,7 +52,7 @@ class AdsViewModel(
         viewModelScope.launch {
             localRepository.getAds().collectLatest { ads ->
                 mutableAdsState.update { state ->
-                    if(!state.adsTopSearchBar.showFavourites) {
+                    if (!state.adsTopSearchBar.showFavourites) {
                         AdsMapper.showFavouriteLocalAdsContent(
                             state = state,
                             adEntity = ads,
@@ -85,7 +82,7 @@ class AdsViewModel(
         }
     }
 
-    fun onTextChange(search: String) {
+    fun onSearchChange(search: String) {
         mutableAdsState.update { state ->
             if (search.isNotEmpty()) {
                 AdsMapper.applySearchQueryResult(state, search)
@@ -121,7 +118,7 @@ class AdsViewModel(
         }
     }
 
-    fun favouriteAd(
+    fun addFavouriteAd(
         adUi: AdUiModel
     ) {
         viewModelScope.launch {

@@ -62,7 +62,7 @@ fun AdsScreen(
                     .fillMaxWidth(),
                 searchText = searchText,
                 onTextChange = { search ->
-                    viewModel.onTextChange(search)
+                    viewModel.onSearchChange(search)
                 },
                 onClearSearch = {
                     viewModel.onClearSearch()
@@ -87,7 +87,7 @@ fun AdsScreen(
                     AdsGridScreen(
                         state.ads.items,
                         onFavouriteAdClick = { ad ->
-                            viewModel.favouriteAd(ad)
+                            viewModel.addFavouriteAd(ad)
                         }
                     )
                 }

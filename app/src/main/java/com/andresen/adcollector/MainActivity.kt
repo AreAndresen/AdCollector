@@ -31,13 +31,11 @@ class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModel()
 
     // todo these viewmodels move out of main
-    private val adsViewModel: AdsViewModel by viewModel()
+   private val adsViewModel: AdsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val mapUiState by adsViewModel.state.collectAsState(AdsMapper.loading())
-            //val unitsUiState by unitViewModel.state.collectAsState()
 
             AdCollectorComposableTheme {
                 val navController = rememberNavController()
@@ -94,7 +92,7 @@ class MainActivity : ComponentActivity() {
                     AdCollectorNavHost(
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
-                        adsViewModel = adsViewModel,
+                        adsViewModel = adsViewModel
                     )
                 }
             }
