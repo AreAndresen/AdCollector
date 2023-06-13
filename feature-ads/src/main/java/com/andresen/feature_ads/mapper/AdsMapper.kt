@@ -186,6 +186,7 @@ object AdsMapper {
         )
     }
 
+    // todo fix flickr
     fun applyFavourite(state: AdsUi, adUi: AdUiModel): AdsUi {
         val adsContent = state.adsContent
         return state.copy(
@@ -195,7 +196,7 @@ object AdsMapper {
                         items = adsContent.ads.items.map { ad ->
                             if (ad == adUi) {
                                 ad.copy(
-                                    isFavourite = true
+                                    isFavourite = !ad.isFavourite
                                 )
                             } else ad
                         }
