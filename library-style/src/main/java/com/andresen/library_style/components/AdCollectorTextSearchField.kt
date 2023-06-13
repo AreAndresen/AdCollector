@@ -42,9 +42,10 @@ fun AdCollectorTextSearchField(
     searchText: String,
     onTextChange: (String) -> Unit,
     onClearClick: () -> Unit = { },
-    onGetLocalFavourites: () -> Unit = {},
+    onToggleShowFavourites: () -> Unit = {},
     singleLine: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    showFavourites: Boolean
 ) {
 
     Box(
@@ -81,7 +82,8 @@ fun AdCollectorTextSearchField(
             searchText = searchText,
             isTextFieldFocused = isTextFieldFocused,
             onClearClick = onClearClick,
-            onGetLocalFavourites = onGetLocalFavourites
+            onToggleShowFavourites = onToggleShowFavourites,
+            showFavourites = showFavourites
         )
     }
 }
@@ -90,9 +92,10 @@ fun AdCollectorTextSearchField(
 private fun AnimatedTextFieldContent(
     label: String,
     searchText: String,
+    showFavourites: Boolean,
     isTextFieldFocused: Boolean,
     onClearClick: () -> Unit = {},
-    onGetLocalFavourites: () -> Unit = {},
+    onToggleShowFavourites: () -> Unit = {},
 ) {
     val showLabel = remember(isTextFieldFocused, searchText) {
         !isTextFieldFocused && searchText.isEmpty()
@@ -166,15 +169,18 @@ private fun AnimatedTextFieldContent(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                IconButton(onClick = { onGetLocalFavourites() }) {
+                IconButton(onClick = { onToggleShowFavourites() }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.star_favourite),
-                        contentDescription = rememberStringResource(id = R.string.see_favourites),
+                        painter = if (showFavourites) {
+                            painterResource(id = R.drawable.star_favourite)
+                        } else painterResource(id = R.drawable.star_not_favourite),
+                        contentDescription = if (showFavourites) {
+                            rememberStringResource(id = R.string.see_favourites)
+                        } else rememberStringResource(id = R.string.see_none_favourites),
                         tint = AdCollectorTheme.colors.contrastLight
                     )
                 }
             }
-
         }
     }
 
@@ -220,7 +226,8 @@ private fun DefaultPreview() {
                     .fillMaxWidth(),
                 searchText = text,
                 onTextChange = { text = it },
-                onClearClick = { }
+                onClearClick = { },
+                showFavourites = false
             )
         }
     }

@@ -42,5 +42,6 @@ data class ImageUi(
 enum class AdTypeUi { BAP, REALESTATE, B2B, Unknown }
 
 data class AdsTopSearchBar(
-    val query: String
+    val query: String,
+    val showFavourites: Boolean = false
 )

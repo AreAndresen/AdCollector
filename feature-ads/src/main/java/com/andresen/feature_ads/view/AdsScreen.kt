@@ -67,9 +67,10 @@ fun AdsScreen(
                 onClearSearch = {
                     viewModel.onClearSearch()
                 },
-                onGetLocalFavourites = {
-                    viewModel.onGetLocalFavourites()
-                }
+                onToggleShowFavourites = {
+                    viewModel.onToggleShowFavourites()
+                },
+                showFavourites = adsUiState.adsTopSearchBar.showFavourites
             )
         },
     ) { padding ->

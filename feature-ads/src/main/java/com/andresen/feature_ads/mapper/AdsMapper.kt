@@ -47,23 +47,6 @@ object AdsMapper {
         )
     }
 
-    fun createFavouriteLocalAdsContent(
-        adEntity: List<AdEntity>
-    ): AdsUi {
-        return AdsUi(
-            adsTopSearchBar = AdsTopSearchBar(
-                query = ""
-            ),
-            adsContent = AdsContentUi.AdsContent(
-                ads = AdsUiModel(
-                    fetchMore = null,
-                    size = null,
-                    version = null, // todo
-                    items = mapEntityAds(adEntity)
-                )
-            )
-        )
-    }
 
     private fun mapAdDtoToAdUi(
         adDto: AdDto
@@ -139,7 +122,7 @@ object AdsMapper {
     }
 
 
-    fun emptySearch(
+    fun showAllAds(
         state: AdsUi,
         adsDto: AdsDto
     ): AdsUi {
@@ -147,12 +130,35 @@ object AdsMapper {
         val topSearchBar = state.adsTopSearchBar
         return state.copy(
             adsTopSearchBar = topSearchBar.copy(
-                query = ""
+                query = "",
+                showFavourites = !topSearchBar.showFavourites
             ),
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
                     ads = adsContent.ads.copy(
                         items = mapAds(adsDto.items)
+                    )
+                )
+            } else adsContent
+        )
+    }
+
+    fun showFavouriteLocalAdsContent(
+        state: AdsUi,
+        adEntity: List<AdEntity>
+    ): AdsUi {
+        val adsContent = state.adsContent
+        val topSearchBar = state.adsTopSearchBar
+
+        return state.copy(
+            adsTopSearchBar = topSearchBar.copy(
+                query = "",
+                showFavourites = !topSearchBar.showFavourites
+            ),
+            adsContent = if (adsContent is AdsContentUi.AdsContent) {
+                adsContent.copy(
+                    ads = adsContent.ads.copy(
+                    items = mapEntityAds(adEntity)
                     )
                 )
             } else adsContent
