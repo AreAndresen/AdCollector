@@ -30,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.andresen.feature_ads.model.AdUiModel
@@ -39,7 +38,6 @@ import com.andresen.feature_ads.view.composable.SearchBarCompose
 import com.andresen.feature_ads.viewmodel.AdsViewModel
 import com.andresen.library_style.R
 import com.andresen.library_style.theme.AdCollectorTheme
-import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -49,8 +47,6 @@ fun AdsScreen(
     viewModel: AdsViewModel = koinViewModel()
 ) {
     val adsUiState by viewModel.state.collectAsState()
-    val state = adsUiState.adsContent
-    val searchText = adsUiState.adsTopSearchBar.query
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(
@@ -63,7 +59,7 @@ fun AdsScreen(
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxWidth(),
-                searchText = searchText,
+                searchText = adsUiState.adsTopSearchBar.query,
                 onTextChange = { search ->
                     viewModel.onSearchChange(search)
                 },
@@ -84,8 +80,11 @@ fun AdsScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            when (state) {
-                is AdsContentUi.Loading -> {} // todo LoadingScreen(modifier)
+            when (val state = adsUiState.adsContent) {
+                is AdsContentUi.Loading -> {
+                    // todo LoadingScreen(modifier)
+                }
+
                 is AdsContentUi.AdsContent -> {
                     AdsGridScreen(
                         state.ads.items,
@@ -95,7 +94,9 @@ fun AdsScreen(
                     )
                 }
 
-                is AdsContentUi.Error -> {} //todo ErrorScreen(retryAction, modifier)
+                is AdsContentUi.Error -> {
+                    //todo ErrorScreen(retryAction, modifier)
+                }
             }
         }
     }
