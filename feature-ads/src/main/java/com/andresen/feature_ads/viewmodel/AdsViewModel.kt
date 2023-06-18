@@ -32,9 +32,11 @@ class AdsViewModel(
                 is DataResult.Success -> {
                     val adsDto = adsResult.data
 
-                    mutableAdsState.value = AdsMapper.createAdsContent(
+                    val adsUi = AdsMapper.createAdsContent(
                         adsDto = adsDto,
                     )
+
+                    mutableAdsState.value = adsUi
                 }
 
                 is DataResult.Error.AppError -> {
@@ -58,24 +60,7 @@ class AdsViewModel(
                             adEntity = ads,
                         )
                     } else {
-                        when (val adsResult = adsRepository.getAdsDto()) {
-                            is DataResult.Success -> {
-                                val adsDto = adsResult.data
-
-                                AdsMapper.showAllAds(
-                                    state = state,
-                                    adsDto = adsDto,
-                                )
-                            }
-
-                            is DataResult.Error.AppError -> {
-                                AdsMapper.error()
-                            }
-
-                            is DataResult.Error.NoNetwork -> {
-                                AdsMapper.error()
-                            }
-                        }
+                        onGetAllAds(state)
                     }
                 }
             }
@@ -92,28 +77,32 @@ class AdsViewModel(
         }
     }
 
+    private suspend fun onGetAllAds(state: AdsUi): AdsUi {
+        return when (val adsResult = adsRepository.getAdsDto()) {
+            is DataResult.Success -> {
+                val adsDto = adsResult.data
+
+                AdsMapper.showAllAds(
+                    state = state,
+                    adsDto = adsDto,
+                )
+            }
+
+            is DataResult.Error.AppError -> {
+                AdsMapper.error()
+            }
+
+            is DataResult.Error.NoNetwork -> {
+                AdsMapper.error()
+            }
+        }
+    }
+
+
     fun onClearSearch() {
         viewModelScope.launch {
             mutableAdsState.update { state ->
-                when (val adsResult = adsRepository.getAdsDto()) {
-                    is DataResult.Success -> {
-                        val adsDto = adsResult.data
-
-                        AdsMapper.showAllAds(
-                            state = state,
-                            adsDto = adsDto,
-                        )
-                    }
-
-                    is DataResult.Error.AppError -> {
-                        AdsMapper.error()
-                    }
-
-                    is DataResult.Error.NoNetwork -> {
-                        AdsMapper.error()
-                    }
-                }
-
+                onGetAllAds(state)
             }
         }
     }
@@ -127,10 +116,10 @@ class AdsViewModel(
                     adUi
                 )
 
-                if(adEntity.isFavourite) {
-                    localRepository.deleteAdFavourite(adEntity)
-                } else {
+                if (adEntity.isFavourite) {
                     localRepository.insertAdFavourite(adEntity)
+                } else {
+                    localRepository.deleteAdFavourite(adEntity)
                 }
 
                 AdsMapper.applyFavourite(

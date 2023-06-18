@@ -98,7 +98,7 @@ object AdsMapper {
             title = adUi.title,
             price = adUi.price,
             imageUrl = adUi.image?.imageUrl,
-            isFavourite = true,
+            isFavourite = !adUi.isFavourite,
             location = adUi.location
         )
     }
@@ -190,6 +190,7 @@ object AdsMapper {
     fun applyFavourite(state: AdsUi, adUi: AdUiModel): AdsUi {
         val adsContent = state.adsContent
         return state.copy(
+            adsTopSearchBar = state.adsTopSearchBar,
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
                     ads = adsContent.ads.copy(
