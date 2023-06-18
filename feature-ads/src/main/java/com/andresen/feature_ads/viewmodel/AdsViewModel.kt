@@ -5,24 +5,40 @@ import androidx.lifecycle.viewModelScope
 import com.andresen.feature_ads.mapper.AdsMapper
 import com.andresen.feature_ads.model.AdUiModel
 import com.andresen.feature_ads.model.AdsUi
+import com.andresen.library_repositories.ads.local.AdEntity
 import com.andresen.library_repositories.ads.local.AdsLocalRepository
 import com.andresen.library_repositories.ads.remote.AdsRepository
 import com.andresen.library_repositories.helper.network.DataResult
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class AdsViewModel(
     private val adsRepository: AdsRepository,
     private val localRepository: AdsLocalRepository,
 ) : ViewModel() {
 
+    private val mutableLocalFavourites: MutableStateFlow<List<AdEntity>> =
+    MutableStateFlow(emptyList())
+
     private val mutableAdsState = MutableStateFlow(AdsMapper.loading())
     val state: StateFlow<AdsUi> = mutableAdsState
 
     init {
+        viewModelScope.launch {
+            localRepository.getAds().collectLatest { ads ->
+                mutableLocalFavourites.value = ads
+            }
+        }
+
         createAds()
     }
 
@@ -52,19 +68,18 @@ class AdsViewModel(
 
     fun onToggleShowFavourites() {
         viewModelScope.launch {
-            localRepository.getAds().collectLatest { ads ->
                 mutableAdsState.update { state ->
                     if (!state.adsTopSearchBar.showFavourites) {
                         AdsMapper.showFavouriteLocalAdsContent(
                             state = state,
-                            adEntity = ads,
+                            adEntity = mutableLocalFavourites.value,
                         )
                     } else {
                         onGetAllAds(state)
                     }
                 }
             }
-        }
+
     }
 
     fun onSearchChange(search: String) {
@@ -122,7 +137,7 @@ class AdsViewModel(
                     localRepository.deleteAdFavourite(adEntity)
                 }
 
-                AdsMapper.applyFavourite(
+                AdsMapper.toggleFavouriteAd(
                     state = state,
                     adUi = adUi,
                 )

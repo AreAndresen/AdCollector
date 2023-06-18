@@ -70,7 +70,8 @@ object AdsMapper {
             ),
             price = adDto.price?.value ?: adDto.price?.total,
             location = adDto.location,
-            title = adDto.description
+            title = adDto.description,
+            isFavourite = false // todo should come from backend to get changed correctly
         )
     }
 
@@ -187,10 +188,10 @@ object AdsMapper {
     }
 
     // todo fix flickr
-    fun applyFavourite(state: AdsUi, adUi: AdUiModel): AdsUi {
+    fun toggleFavouriteAd(state: AdsUi, adUi: AdUiModel): AdsUi {
         val adsContent = state.adsContent
         return state.copy(
-            adsTopSearchBar = state.adsTopSearchBar,
+            //adsTopSearchBar = state.adsTopSearchBar,
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
                     ads = adsContent.ads.copy(
@@ -203,7 +204,9 @@ object AdsMapper {
                         }
                     )
                 )
-            } else adsContent
+            } else {
+                adsContent
+            }
         )
     }
 
