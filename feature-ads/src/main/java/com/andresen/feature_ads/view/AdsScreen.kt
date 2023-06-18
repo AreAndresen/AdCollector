@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.andresen.feature_ads.model.AdUiModel
@@ -38,12 +39,14 @@ import com.andresen.feature_ads.view.composable.SearchBarCompose
 import com.andresen.feature_ads.viewmodel.AdsViewModel
 import com.andresen.library_style.R
 import com.andresen.library_style.theme.AdCollectorTheme
+import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun AdsScreen(
     modifier: Modifier = Modifier,
-    viewModel: AdsViewModel,
+    viewModel: AdsViewModel = koinViewModel()
 ) {
     val adsUiState by viewModel.state.collectAsState()
     val state = adsUiState.adsContent

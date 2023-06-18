@@ -10,7 +10,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -20,18 +19,13 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.andresen.adcollector.main.navigation.AdCollectorNavHost
-import com.andresen.feature_ads.viewmodel.AdsViewModel
+import com.andresen.adcollector.main.navigation.Screen
 import com.andresen.library_style.theme.AdCollectorComposableTheme
 import com.andresen.library_style.theme.AdCollectorTheme
-import com.andresen.adcollector.main.navigation.Screen
-import com.andresen.feature_ads.mapper.AdsMapper
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModel()
-
-    // todo these viewmodels move out of main
-   private val adsViewModel: AdsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,11 +85,10 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     AdCollectorNavHost(
                         modifier = Modifier.padding(innerPadding),
-                        navController = navController,
-                        adsViewModel = adsViewModel
+                        navController = navController
                     )
                 }
             }
         }
-        }
     }
+}

@@ -2,6 +2,7 @@ buildscript {
     ext {
         compose_version = '1.1.0'
         koin_version = "3.3.2"
+        koin_compose_version = "3.4.1"
         kotlin_version = '1.6.10'
         cast_version = '21.2.0'
         gradle_version = '5.6.4'
@@ -12,6 +13,7 @@ buildscript {
         room_version = "2.5.1"
         retrofit_version = '2.9.0'
         timber_version = "5.0.0"
+        okhttp_version = '4.9.0'
         moshi_version = '1.14.0'
         okhttp_version = '4.10.0'
         nav_version = "2.5.3"
