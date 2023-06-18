@@ -118,7 +118,7 @@ class AdsViewModel(
         }
     }
 
-    fun addFavouriteAd(
+    fun toggleFavouriteAd(
         adUi: AdUiModel
     ) {
         viewModelScope.launch {
@@ -126,7 +126,12 @@ class AdsViewModel(
                 val adEntity = AdsMapper.mapAdUiToAdEntity(
                     adUi
                 )
-                localRepository.insertAdFavourite(adEntity)
+
+                if(adEntity.isFavourite) {
+                    localRepository.deleteAdFavourite(adEntity)
+                } else {
+                    localRepository.insertAdFavourite(adEntity)
+                }
 
                 AdsMapper.applyFavourite(
                     state = state,

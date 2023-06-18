@@ -77,19 +77,19 @@ fun AdsScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when (val state = adsUiState.adsContent) {
                 is AdsContentUi.Loading -> {
-                    // todo LoadingScreen(modifier)
+                    //todo LoadingScreen(modifier)
                 }
 
                 is AdsContentUi.AdsContent -> {
                     AdsGridScreen(
                         state.ads.items,
-                        onFavouriteAdClick = { ad ->
-                            viewModel.addFavouriteAd(ad)
+                        onToggleFavouriteAd = { ad ->
+                            viewModel.toggleFavouriteAd(ad)
                         }
                     )
                 }
@@ -105,7 +105,7 @@ fun AdsScreen(
 @Composable
 fun AdsGridScreen(
     ads: List<AdUiModel>,
-    onFavouriteAdClick: (AdUiModel) -> Unit = { },
+    onToggleFavouriteAd: (AdUiModel) -> Unit = { },
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
@@ -120,7 +120,7 @@ fun AdsGridScreen(
                 Box(contentAlignment = Alignment.BottomCenter) {
                     AdPhotoCard(ads[index])
 
-                    IconButton(onClick = { onFavouriteAdClick(ads[index]) }) {
+                    IconButton(onClick = { onToggleFavouriteAd(ads[index]) }) {
                         Icon(
                             modifier = Modifier.size(150.dp),
                             painter = if (ads[index].isFavourite) {
