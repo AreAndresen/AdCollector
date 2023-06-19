@@ -4,22 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.andresen.feature_ads.mapper.AdsMapper
 import com.andresen.feature_ads.model.AdUiModel
+import com.andresen.feature_ads.model.AdsContentUi
 import com.andresen.feature_ads.model.AdsUi
 import com.andresen.library_repositories.ads.local.AdEntity
 import com.andresen.library_repositories.ads.local.AdsLocalRepository
 import com.andresen.library_repositories.ads.remote.AdsRepository
 import com.andresen.library_repositories.helper.network.DataResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class AdsViewModel(
     private val adsRepository: AdsRepository,
@@ -27,10 +25,11 @@ class AdsViewModel(
 ) : ViewModel() {
 
     private val mutableLocalFavourites: MutableStateFlow<List<AdEntity>> =
-    MutableStateFlow(emptyList())
+        MutableStateFlow(emptyList())
 
     private val mutableAdsState = MutableStateFlow(AdsMapper.loading())
     val state: StateFlow<AdsUi> = mutableAdsState
+
 
     init {
         viewModelScope.launch {
@@ -43,16 +42,36 @@ class AdsViewModel(
     }
 
     private fun createAds() {
-        viewModelScope.launch {
+        viewModelScope.launchPeriodically(60_000)
+    }
+
+
+    private fun CoroutineScope.launchPeriodically(
+        repeatMillis: Long
+    ) = this.launch {
+        while (isActive) {
             when (val adsResult = adsRepository.getAdsDto()) {
                 is DataResult.Success -> {
                     val adsDto = adsResult.data
 
-                    val adsUi = AdsMapper.createAdsContent(
-                        adsDto = adsDto,
-                    )
+                    when (mutableAdsState.value.adsContent) {
+                        is AdsContentUi.AdsContent -> {
+                            mutableAdsState.update { state ->
+                                // if at favourites page, keep state - else update remote ads page
+                                if (state.adsTopSearchBar.showFavourites) {
+                                    state
+                                } else {
+                                    onUpdateRemoteAds(state, false)
+                                }
+                            }
+                        }
 
-                    mutableAdsState.value = adsUi
+                        else -> {
+                            mutableAdsState.value = AdsMapper.createAdsContent(
+                                adsDto = adsDto,
+                            )
+                        }
+                    }
                 }
 
                 is DataResult.Error.AppError -> {
@@ -63,22 +82,25 @@ class AdsViewModel(
                     mutableAdsState.value = AdsMapper.error()
                 }
             }
+
+            delay(repeatMillis)
         }
     }
 
+
     fun onToggleShowFavourites() {
         viewModelScope.launch {
-                mutableAdsState.update { state ->
-                    if (!state.adsTopSearchBar.showFavourites) {
-                        AdsMapper.showFavouriteLocalAdsContent(
-                            state = state,
-                            adEntity = mutableLocalFavourites.value,
-                        )
-                    } else {
-                        onGetAllAds(state)
-                    }
+            mutableAdsState.update { state ->
+                if (!state.adsTopSearchBar.showFavourites) {
+                    AdsMapper.getAllLocalFavouriteAds(
+                        state = state,
+                        adEntity = mutableLocalFavourites.value,
+                    )
+                } else {
+                    onUpdateRemoteAds(state, true)
                 }
             }
+        }
 
     }
 
@@ -92,14 +114,15 @@ class AdsViewModel(
         }
     }
 
-    private suspend fun onGetAllAds(state: AdsUi): AdsUi {
+    private suspend fun onUpdateRemoteAds(state: AdsUi, toggleFavourites: Boolean): AdsUi {
         return when (val adsResult = adsRepository.getAdsDto()) {
             is DataResult.Success -> {
                 val adsDto = adsResult.data
 
-                AdsMapper.showAllAds(
+                AdsMapper.updateRemoteAds(
                     state = state,
                     adsDto = adsDto,
+                    toggleFavourites = toggleFavourites
                 )
             }
 
@@ -117,7 +140,7 @@ class AdsViewModel(
     fun onClearSearch() {
         viewModelScope.launch {
             mutableAdsState.update { state ->
-                onGetAllAds(state)
+                onUpdateRemoteAds(state, false)
             }
         }
     }

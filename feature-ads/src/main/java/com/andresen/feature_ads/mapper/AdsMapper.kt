@@ -123,16 +123,19 @@ object AdsMapper {
     }
 
 
-    fun showAllAds(
+    fun updateRemoteAds(
         state: AdsUi,
-        adsDto: AdsDto
+        adsDto: AdsDto,
+        toggleFavourites: Boolean
     ): AdsUi {
         val adsContent = state.adsContent
         val topSearchBar = state.adsTopSearchBar
         return state.copy(
             adsTopSearchBar = topSearchBar.copy(
                 query = "",
-                showFavourites = !topSearchBar.showFavourites
+                showFavourites = if(toggleFavourites) {
+                    !topSearchBar.showFavourites
+                } else topSearchBar.showFavourites
             ),
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
@@ -144,7 +147,7 @@ object AdsMapper {
         )
     }
 
-    fun showFavouriteLocalAdsContent(
+    fun getAllLocalFavouriteAds(
         state: AdsUi,
         adEntity: List<AdEntity>
     ): AdsUi {
