@@ -20,14 +20,14 @@ class AdsRepositoryImpl(
             }
         }
 
-    override suspend fun putFavorite(ad: AdDto, enableFavourite: Boolean?): DataResult<out Unit> =
+    override suspend fun updateFavouriteAd(ad: AdDto, isFavourite: Boolean): DataResult<out Unit> =
         withContext(dispatchers.io) {
             requestHelper.tryRequest {
 
-                val favouriteLink = ad.url ?: ""
-
-                api.putFavorite(
-                    adFavouriteLink = favouriteLink,
+                api.updateFavouriteAd(
+                    id = ad.id,
+                    isFavourite = isFavourite,
+                    favoriteAdRequest = PutFavoriteAdRequestDto(isFavourite)
                 )
                 // if i want to listen to favourites and call get in viewmodel to refresh
                 adsGlobalEvent.adUpdate()

@@ -1,10 +1,12 @@
 package com.andresen.library_repositories.ads.remote
 
+
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.PUT
-import retrofit2.http.Url
+import retrofit2.http.Path
 
 interface AdsApiService {
 
@@ -13,9 +15,11 @@ interface AdsApiService {
     suspend fun getAds(): AdsDto
 
 
-    @PUT
-    suspend fun putFavorite(
-        @Url adFavouriteLink: String,
-        @Body favoritesRequest: PutFavoritesRequestDto = PutFavoritesRequestDto()
-    )
+    // mock PUT request
+    @PUT("baldermork/6a1bcc8f429dcdb8f9196e917e5138bd/raw/items/{id}/favourite/{isFavorite}")
+    suspend fun updateFavouriteAd(
+        @Path("id") id: String,
+        @Path("isFavourite") isFavourite: Boolean,
+        @Body favoriteAdRequest: PutFavoriteAdRequestDto
+    ): Response<Unit>
 }

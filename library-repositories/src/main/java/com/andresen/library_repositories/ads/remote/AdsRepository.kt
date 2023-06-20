@@ -7,6 +7,6 @@ interface AdsRepository {
 
     suspend fun getAdsDto(): DataResult<out AdsDto>
 
-    suspend fun putFavorite(ad: AdDto, enableFavourite: Boolean? = false): DataResult<out Unit>
+    suspend fun updateFavouriteAd(ad: AdDto, isFavourite: Boolean): DataResult<out Unit>
 
 }

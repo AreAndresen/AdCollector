@@ -70,6 +70,7 @@ enum class AdTypeDto(val value: String) {
     Unknown("")
 }
 
-data class PutFavoritesRequestDto(
-    val isFavourite: Boolean? = null
+@Serializable
+data class PutFavoriteAdRequestDto(
+    val isFavourite: Boolean
 )
