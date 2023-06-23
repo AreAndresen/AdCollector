@@ -133,7 +133,7 @@ object AdsMapper {
         return state.copy(
             adsTopSearchBar = topSearchBar.copy(
                 query = "",
-                showFavourites = if(toggleFavourites) {
+                showFavourites = if (toggleFavourites) {
                     !topSearchBar.showFavourites
                 } else topSearchBar.showFavourites
             ),
@@ -190,11 +190,9 @@ object AdsMapper {
         )
     }
 
-    // todo fix flickr
     fun toggleFavouriteAd(state: AdsUi, adUi: AdUiModel): AdsUi {
         val adsContent = state.adsContent
         return state.copy(
-            //adsTopSearchBar = state.adsTopSearchBar,
             adsContent = if (adsContent is AdsContentUi.AdsContent) {
                 adsContent.copy(
                     ads = adsContent.ads.copy(

@@ -57,16 +57,18 @@ class AdsViewModel(
                     when (mutableAdsState.value.adsContent) {
                         is AdsContentUi.AdsContent -> {
                             mutableAdsState.update { state ->
-                                // if at favourites page, keep state - else update remote ads page
                                 if (state.adsTopSearchBar.showFavourites) {
+                                    // if at favourites page, keep state
                                     state
                                 } else {
+                                    // else update remote ads page to pull newest ads
                                     onUpdateRemoteAds(state, false)
                                 }
                             }
                         }
 
                         else -> {
+                            // first init / create ads
                             mutableAdsState.value = AdsMapper.createAdsContent(
                                 adsDto = adsDto,
                             )

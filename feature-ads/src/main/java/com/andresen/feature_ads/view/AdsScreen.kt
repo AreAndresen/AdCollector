@@ -82,7 +82,7 @@ fun AdsScreen(
         ) {
             when (val state = adsUiState.adsContent) {
                 is AdsContentUi.Loading -> {
-                    //todo LoadingScreen(modifier)
+                    // todo LoadingScreen(modifier)
                 }
 
                 is AdsContentUi.AdsContent -> {
@@ -95,7 +95,7 @@ fun AdsScreen(
                 }
 
                 is AdsContentUi.Error -> {
-                    //todo ErrorScreen(retryAction, modifier)
+                    // todo ErrorScreen(retryAction, modifier)
                 }
             }
         }
